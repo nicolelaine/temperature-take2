@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Data Form</title>
+</head>
+<body>
+    <h1>Scrape Weather Data</h1>
+    <form id="weatherForm">
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+        <button type="submit">Get Weather Data</button>
+    </form>
+
+    <div id="result">
+        <!-- The scraped data will be displayed here -->
+    </div>
+
+    <script>
+        // Function to send a POST request to the Python script
+        async function scrapeWeatherData(city) {
+            const response = await fetch('/scrape', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ city: city }),
+            });
+
+            if (response.ok) {
+                const data = await response.text();
+                document.getElementById('result').innerText = data;
+            } else {
+                document.getElementById('result').innerText = 'Failed to fetch data.';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('weatherForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const city = document.getElementById('city').value;
+            scrapeWeatherData(city);
+        });
+    </script>
+</body>
+</html>
